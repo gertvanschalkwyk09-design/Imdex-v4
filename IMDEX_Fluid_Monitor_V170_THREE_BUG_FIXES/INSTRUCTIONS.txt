@@ -1,0 +1,9 @@
+IMDEX Fluid Monitor V170 APK Fix
+
+Fixes:
+- IMDEX-branded launcher icon instead of default Android icon.
+- MQTT settings section is visible, including Username and Password fields.
+- Kotlin duplicate-class dependency conflict fixed.
+- ROP/MQTT mapping logic is unchanged from V168.
+
+Upload the project contents to GitHub with app/, build.gradle, settings.gradle and .github at repository root, then run the Build IMDEX Fluid Monitor V170 APK workflow.

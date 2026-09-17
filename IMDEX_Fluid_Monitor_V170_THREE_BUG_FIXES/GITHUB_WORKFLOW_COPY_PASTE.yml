@@ -1,0 +1,41 @@
+name: Build IMDEX Fluid Monitor V170 APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Find Android project and build APK
+        shell: bash
+        run: |
+          set -e
+          SETTINGS_FILE=$(find . -name settings.gradle -type f | head -1)
+          test -n "$SETTINGS_FILE" || { echo "settings.gradle not found"; exit 1; }
+          cd "$(dirname "$SETTINGS_FILE")"
+          gradle assembleDebug --stacktrace
+      - name: Find and prepare APK
+        shell: bash
+        run: |
+          set -e
+          APK_FILE=$(find . -path '*/build/outputs/apk/debug/*.apk' -type f | head -1)
+          test -n "$APK_FILE" || { echo "APK was not created"; exit 1; }
+          cp "$APK_FILE" "$GITHUB_WORKSPACE/IMDEX_Fluid_Monitor_V170.apk"
+      - name: Upload V170 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: IMDEX-Fluid-Monitor-V170
+          path: IMDEX_Fluid_Monitor_V170.apk
+          if-no-files-found: error
